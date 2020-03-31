@@ -4,34 +4,36 @@ using namespace std;
 
 int server_connect(char* ip_address, int port) 
 {
+	int sock;
 #ifdef WIN32
 
 #else
-    int sock;
-    struct sockaddr_in inet;
-	memset(&inet, 0x0, sizeof(inet));
-    inet.sin_family = AF_INET;
-	inet.sin_port = htons(port);
-	inet.sin_addr.s_addr = (ip_address != nullptr) ? inet_addr(ip_address) : htonl(INADDR_ANY);
-	// Connect to the server */
+    struct sockaddr_in address;
+	memset(&address, 0x0, sizeof(address));
+    address.sin_family = AF_INET;
+	address.sin_port = htons(port);
+	address.sin_addr.s_addr = (ip_address != nullptr) ? inet_addr(ip_address) : INADDR_ANY;
+	// Connect to the server 
 	if((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) 
 	{
-		// Complain, explain, and return 
 		cout << "Failed server socket create" << endl;
 		return -1;
 	}
 	// Setup the socket option to reuse
-	int on = 1;
-	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+	int opt = 1;
+	if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+	{
+		cout << "Failed server set socket options" << endl;
+		return -1;
+	}
 	// Call the connect
-	if(bind(sock, (struct sockaddr *)&inet, sizeof(inet)) != 0) 
+	if(bind(sock, (struct sockaddr*)&address, sizeof(address))) 
     {
-		// Complain, explain, and return
 		cout << "Failed server socket bind" << endl;
 	    return -1;
 	}
 	// Do the listen
-	if(listen(sock, BACKLOG_QUE_SZ) != 0) 
+	if(listen(sock, BACKLOG_QUE_SZ)) 
     {
 		/* Complain, explain, and return */
 		cout << "Failed server socket listen" << endl;
@@ -42,40 +44,42 @@ int server_connect(char* ip_address, int port)
 }
 
 
-int client_connect(char *ip_address, int port)
+int client_connect(char* ip_address, int port)
 {
+	int sock;
 #ifdef WIN32
 
 #else
-	/* Local variables */
-	int sock;
-	struct sockaddr_in inet;
-	// Zero/Set the ip_address
-	memset(&inet, 0x0, sizeof(inet));
-	inet.sin_family = AF_INET;
-	inet.sin_port = htons(port);
-	inet.sin_addr.s_addr = (ip_address != nullptr) ? inet_addr(ip_address) : htonl(INADDR_ANY);
+	struct sockaddr_in address;
+	// Zero / Set the ip_address
+	memset(&address, 0x0, sizeof(address));
+	address.sin_family = AF_INET;
+	address.sin_port = htons(port);
 
-	/* Connect to the server */
+	// Connect to the server
 	if((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
-		/* Complain, explain, and exit */
 		cout << "Failed to create socket" << endl;
 		return -1;
 	}
 
+	if(inet_pton(AF_INET, ip_address, &address.sin_addr) <= 0)  
+    { 
+        cout << "Invalid address/ Address not supported" << endl; 
+        return -1; 
+    } 
+
 	// Call the connect
-	if(connect(sock, (struct sockaddr *)&inet, sizeof(inet)) != 0)
+	if(connect(sock, (struct sockaddr*)&address, sizeof(address)) == -1)
 	{
-		/* Complain, explain, and return */
 		cout << "Failed client socket connection" << endl;
 		return -1;
 	}
 
-	/* Print a log message */
-	printf("Client connected to ip_address [%s / %d], successful ...\n", ip_address, port);
+	// Print a log message
+	cout << "Client connected to ip_address [" << ip_address << " / " << port << "]" << endl;
 #endif
-	/* Return the file handle */
+	// Return the file handle
 	return sock;
 }
 
