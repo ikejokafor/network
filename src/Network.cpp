@@ -2,7 +2,7 @@
 using namespace std;
 
 
-int server_connect(char* ip_address, int port) 
+int server_connect(char* ip_address, uint16_t port) 
 {
 	int sock;
 #ifdef WIN32
@@ -21,7 +21,12 @@ int server_connect(char* ip_address, int port)
 	}
 	// Setup the socket option to reuse
 	int opt = 1;
-	if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+	if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
+	{
+		cout << "Failed server set socket options" << endl;
+		return -1;
+	}
+	if(setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)))
 	{
 		cout << "Failed server set socket options" << endl;
 		return -1;
@@ -35,7 +40,6 @@ int server_connect(char* ip_address, int port)
 	// Do the listen
 	if(listen(sock, BACKLOG_QUE_SZ)) 
     {
-		/* Complain, explain, and return */
 		cout << "Failed server socket listen" << endl;
 	    return -1;
 	}
@@ -44,7 +48,7 @@ int server_connect(char* ip_address, int port)
 }
 
 
-int client_connect(char* ip_address, int port)
+int client_connect(char* ip_address, uint16_t port)
 {
 	int sock;
 #ifdef WIN32
