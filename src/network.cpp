@@ -66,7 +66,7 @@ int client_connect(char* ip_address, uint16_t port)
 		cout << "Failed to create socket" << endl;
 		return -1;
 	}
-
+	
 	if(inet_pton(AF_INET, ip_address, &address.sin_addr) <= 0)  
     { 
         cout << "Invalid address/ Address not supported" << endl; 
@@ -81,7 +81,7 @@ int client_connect(char* ip_address, uint16_t port)
 	}
 
 	// Print a log message
-	cout << "Client connected to ip_address [" << ip_address << " / " << port << "]" << endl;
+	cout << "Client connected to server" << endl;
 #endif
 	// Return the file handle
 	return sock;
