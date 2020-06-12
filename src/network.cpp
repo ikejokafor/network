@@ -55,7 +55,6 @@ int client_connect(char* ip_address, uint16_t port)
 
 #else
 	struct sockaddr_in address;
-	// Zero / Set the ip_address
 	memset(&address, 0x0, sizeof(address));
 	address.sin_family = AF_INET;
 	address.sin_port = htons(port);
