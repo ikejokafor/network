@@ -48,7 +48,7 @@ int server_connect(char* ip_address, uint16_t port)
 }
 
 
-int client_connect(char* ip_address, uint16_t port)
+int client_connect(const char* ip_address, uint16_t port)
 {
 	int sock;
 #ifdef WIN32
