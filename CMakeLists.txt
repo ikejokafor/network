@@ -139,8 +139,9 @@ SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES
 
 # BEGIN Compiler Flags ------------------------------------------------------------------------------------------------------------------------------
 TARGET_COMPILE_OPTIONS(${TARGET_NAME} PUBLIC 
-    "-std=c++14" 
+    "-std=c++1y"
     "-Wall"
+    "-fPIC"
     "-fexceptions"
 )
 # END Compiler Flags --------------------------------------------------------------------------------------------------------------------------------
