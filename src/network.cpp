@@ -1,4 +1,4 @@
-#include "Network.hpp"
+#include "network.hpp"
 using namespace std;
 
 
