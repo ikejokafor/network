@@ -2,7 +2,7 @@
 
 
 // Definitions
-#define MAX_BLK_SZ      1024
+#define MAX_BLK_SZ      16384
 #define BACKLOG_QUE_SZ  128
 
 
