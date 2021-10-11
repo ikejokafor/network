@@ -16,6 +16,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <iostream>
+#include <cstdlib>
 #ifdef WIN32
 #include <windows.h>
 #include <winsock2.h>

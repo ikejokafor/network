@@ -5,6 +5,10 @@ using namespace std;
 int server_connect(char* ip_address, uint16_t port) 
 {
 	int sock;
+#ifdef MODEL_TECH
+    return 0;
+#endif
+
 #ifdef WIN32
 
 #else
@@ -17,6 +21,7 @@ int server_connect(char* ip_address, uint16_t port)
 	if((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) 
 	{
 		cout << "Failed server socket create" << endl;
+        cout << "Error: "; perror("socket");
 		return -1;
 	}
 	// Setup the socket option to reuse
@@ -24,23 +29,27 @@ int server_connect(char* ip_address, uint16_t port)
 	if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
 	{
 		cout << "Failed server set socket options" << endl;
+        cout << "Error: "; perror("setsockopt");
 		return -1;
 	}
 	if(setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, &opt, sizeof(opt)))
 	{
 		cout << "Failed server set socket options" << endl;
+        cout << "Error: "; perror("setsockopt");
 		return -1;
 	}
 	// Call the connect
 	if(bind(sock, (struct sockaddr*)&address, sizeof(address))) 
     {
 		cout << "Failed server socket bind" << endl;
+        cout << "Error: "; perror("bind");
 	    return -1;
 	}
 	// Do the listen
 	if(listen(sock, BACKLOG_QUE_SZ)) 
-    {
+    {     
 		cout << "Failed server socket listen" << endl;
+        cout << "Error: "; perror("listen");
 	    return -1;
 	}
 #endif
@@ -51,6 +60,10 @@ int server_connect(char* ip_address, uint16_t port)
 int client_connect(const char* ip_address, uint16_t port)
 {
 	int sock;
+#ifdef MODEL_TECH
+    return 0;
+#endif
+
 #ifdef WIN32
 
 #else
@@ -63,12 +76,14 @@ int client_connect(const char* ip_address, uint16_t port)
 	if((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
 		cout << "Failed to create socket" << endl;
+        cout << "Error: "; perror("socket");
 		return -1;
 	}
 	
 	if(inet_pton(AF_INET, ip_address, &address.sin_addr) <= 0)  
     { 
-        cout << "Invalid address/ Address not supported" << endl; 
+        cout << "Invalid address/ Address not supported" << endl;
+        cout << "Error: "; perror("inet_pton");
         return -1; 
     } 
 
@@ -76,6 +91,7 @@ int client_connect(const char* ip_address, uint16_t port)
 	if(connect(sock, (struct sockaddr*)&address, sizeof(address)) == -1)
 	{
 		cout << "Failed client socket connection" << endl;
+        cout << "Error: "; perror("connect");
 		return -1;
 	}
 
