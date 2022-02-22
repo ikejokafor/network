@@ -26,11 +26,10 @@
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------
 /**
- *      \brief              send data over socket
+ *      \brief              hosts a server
  *  
- *      \param[in]          sock server socket
- *      \param[in, out]     blk block to put data in
- *      \param[in]          len of data to send
+ *      \param[in]          ip_address IP Address server hosts from
+ *      \param[in]          port port server hosts from
  *  
  *      \return             0 if successful, -1 if failure
  */
@@ -40,16 +39,15 @@ int server_connect(char* ip_address = nullptr, uint16_t port = 8888);
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------
 /**
- *      \brief
+ *      \brief              connects to a server
  *      
- *      \param[in] 
- *      \param[in, out] 
- *      \param[in] 
+ *      \param[in]          ip_address IP Address client connects to
+ *      \param[in]          port port client connects to
  *      
  *      \return 
  */
 // --------------------------------------------------------------------------------------------------------------------------------------------------
-int client_connect(const char* address = "127.0.0.1", uint16_t port = 8888);
+int client_connect(const char* ip_address = "127.0.0.1", uint16_t port = 8888);
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------
